@@ -1545,8 +1545,8 @@ tags = ["bar", "panel", "service", "system"]
 [[plugin]]
 id = "tphilippot/git_companion"
 name = "Git Companion"
-version = "1.2.0"
-updated_at = 1788314708
+version = "1.3.0"
+updated_at = 1789745769
 added_at = 1786925440
 author = "thomas-philippot"
 license = "MIT"
@@ -2156,8 +2156,8 @@ tags = ["bar", "panel", "niri", "utility"]
 [[plugin]]
 id = "liamwh/emoji-picker"
 name = "Emoji & Symbol Picker"
-version = "1.0.0"
-updated_at = 1788473658
+version = "1.0.1"
+updated_at = 1789745716
 added_at = 1788473658
 author = "liamwh"
 license = "MIT"
