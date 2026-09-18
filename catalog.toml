@@ -445,8 +445,8 @@ tags = ["ai", "productivity", "bar", "desktop", "panel", "launcher"]
 [[plugin]]
 id = "ycf/mawaqit"
 name = "Mawaqit"
-version = "1.0.0"
-updated_at = 1784594730
+version = "1.3.7"
+updated_at = 1789742767
 added_at = 1784594730
 author = "ycf-anon"
 license = "MIT"
