@@ -2775,3 +2775,16 @@ icon = "device-desktop"
 description = "Switch ASUS laptop GPU modes with current, pending, and required-action status."
 plugin_api = 24
 tags = ["hardware", "gaming", "system", "panel", "shortcut"]
+
+[[plugin]]
+id = "baizhu/paged-todo"
+name = "Paged Todo List"
+version = "1.0.0"
+updated_at = 1789745687
+added_at = 1789745687
+author = "lonerOrz (v4 original; v5 port by baizhu945)"
+license = "MIT"
+icon = "clipboard-check"
+description = "Multi-page tasks with details, drag reordering, copying, exports, and V4 migration."
+plugin_api = 22
+tags = ["bar", "panel", "service", "productivity"]
