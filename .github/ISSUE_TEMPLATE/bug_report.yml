@@ -146,6 +146,7 @@ body:
         - opencodex-bar
         - opnsense
         - oppo-pods
+        - paged-todo
         - palette-creator
         - pass
         - phone-connect
