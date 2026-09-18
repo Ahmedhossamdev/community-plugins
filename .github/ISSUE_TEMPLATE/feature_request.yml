@@ -95,6 +95,7 @@ body:
         - ideapad-conservation-mode
         - iio_lock
         - imagemagick-clock
+        - input-echo-bar
         - inventory-manager
         - ip-monitor
         - jetbrains-provider
