@@ -43,6 +43,14 @@ end
 
 local function normalizedUrl(url)
   local value = trim(url)
+  if value:match("^//") then
+    value = "https:" .. value
+  elseif not validWebUrl(value)
+      and (value:match("^[%w%-][%w%.%-]*[%.][%w%-]+$")
+        or value:match("^[%w%-][%w%.%-]*[%.][%w%-]+[:/%?#]")
+        or value:match("^localhost$") or value:match("^localhost[:/%?#]")) then
+    value = "https://" .. value
+  end
   value = value:gsub("#.*$", "")
   local question = value:find("?", 1, true)
   if question == nil then return value end
@@ -316,10 +324,35 @@ local function saveItem(item)
   return true
 end
 
+-- The library may live in a sync folder or be edited outside Noctalia. Recreate
+-- its owned directories before retrying a failed listing so a brief mount/sync
+-- race does not leave the panel stuck with a load error.
+local function ensureLibraryDirectories()
+  if itemsDir == nil or assetsDir == nil or exportsDir == nil then
+    return false, noctalia.tr("errors.create-folder")
+  end
+  local ok, err = noctalia.mkdirAll(itemsDir)
+  if ok then ok, err = noctalia.mkdirAll(assetsDir) end
+  if ok then ok, err = noctalia.mkdirAll(exportsDir) end
+  return ok == true, err
+end
+
 local function loadItems()
   if itemsDir == nil then return end
   local names, err = noctalia.listDir(itemsDir)
   if names == nil then
+    -- A folder can disappear temporarily while a cloud/Obsidian sync is
+    -- replacing it. mkdirAll is idempotent, so repair our directories and
+    -- make one fresh attempt before presenting an error to the user.
+    local repaired, repairErr = ensureLibraryDirectories()
+    if repaired then names, err = noctalia.listDir(itemsDir) end
+    if names == nil then
+      lastError = err or repairErr or noctalia.tr("errors.load")
+      publish()
+      return
+    end
+  end
+  if type(names) ~= "table" then
     lastError = err or noctalia.tr("errors.load")
     publish()
     return
@@ -472,7 +505,9 @@ local function refreshMetadata(id)
     local current = findItem(id)
     if current == nil then return end
     current.fetching = false
-    if not response.ok or response.status < 200 or response.status >= 400 then
+    local success = type(response) == "table" and response.ok == true
+      and type(response.status) == "number" and response.status >= 200 and response.status < 400
+    if not success then
       lastError = noctalia.tr("errors.metadata")
       publish()
       return
@@ -1119,9 +1154,7 @@ local function initialize()
   assetsDir = rootDir .. "/.assets"
   exportsDir = rootDir .. "/Exports"
   collectionsPath = rootDir .. "/Collections.md"
-  local ok, err = noctalia.mkdirAll(itemsDir)
-  if ok then ok, err = noctalia.mkdirAll(assetsDir) end
-  if ok then ok, err = noctalia.mkdirAll(exportsDir) end
+  local ok, err = ensureLibraryDirectories()
   if not ok then lastError = err or noctalia.tr("errors.create-folder") end
   loadItems()
   loadCollections()

@@ -106,22 +106,25 @@ local function copyItem(item)
   }
 end
 
-local function emptyDraft()
-  local clip = noctalia.clipboardText() or ""
-  if not clip:match("^https?://[^%s]+$") then clip = "" end
-  return {
-    type = "article", title = "", url = clip, source = "", author = "",
-    description = "", topics = "", collections = "", status = "unread",
-    progress = 0, currentPage = "0", totalPages = "0", rating = 0,
-    estimatedMinutes = "0", image = "", notes = "", review = "",
-  }
-end
-
 local function clipboardUrl()
   local value = noctalia.clipboardText() or ""
   value = value:gsub("^%s+", ""):gsub("%s+$", "")
   if value:match("^https?://[^%s]+$") then return value end
+  if value:match("^[%w%-][%w%.%-]*[%.][%w%-]+$")
+      or value:match("^[%w%-][%w%.%-]*[%.][%w%-]+[:/%?#]")
+      or value:match("^localhost$") or value:match("^localhost[:/%?#]") then
+    return "https://" .. value
+  end
   return ""
+end
+
+local function emptyDraft()
+  return {
+    type = "article", title = "", url = clipboardUrl(), source = "", author = "",
+    description = "", topics = "", collections = "", status = "unread",
+    progress = 0, currentPage = "0", totalPages = "0", rating = 0,
+    estimatedMinutes = "0", image = "", notes = "", review = "",
+  }
 end
 
 local function fileName(path)
@@ -556,7 +559,12 @@ local function itemCard(item, queueIndex, queueIds)
     }))
   end
 
-  return ui.column({ key = "card-" .. item.id, fill = "surface_variant", radius = 10,
+  -- Metadata arrives after the item has been rendered. Give the host a fresh
+  -- card identity for that transition so it recalculates text width after a
+  -- cover, title, or description changes instead of waiting for panel reopen.
+  local cardKey = "card-" .. item.id .. "-" .. tostring(item.updatedAt or 0)
+    .. "-" .. (item.fetching and "fetching" or "ready")
+  return ui.column({ key = cardKey, fill = "surface_variant", radius = 10,
     padding = 9, gap = 6, align = "stretch" }, children)
 end
 

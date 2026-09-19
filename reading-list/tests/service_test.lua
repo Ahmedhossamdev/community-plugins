@@ -5,6 +5,8 @@ local watchers = {}
 local clock = 1789200000000
 local failRemovePath = nil
 local failNextItemWrite = false
+local failNextList = true
+local pendingHttp = nil
 local writeTargets = {}
 local removeTargets = {}
 
@@ -45,6 +47,10 @@ local function jsonDecode(value)
 end
 
 local function listDir(path)
+  if failNextList then
+    failNextList = false
+    return nil, "forced transient listing failure"
+  end
   local names, seen = {}, {}
   local prefix = path .. "/"
   for filePath, _ in pairs(files) do
@@ -110,7 +116,10 @@ noctalia = {
     end,
     watch = function(key, callback) watchers[key] = callback end,
   },
-  http = function() error("metadata fetch should be disabled in tests") end,
+  http = function(_request, callback)
+    pendingHttp = callback
+    return true
+  end,
   download = function() error("downloads should be disabled in tests") end,
 }
 
@@ -145,6 +154,7 @@ files["/library/.assets/../../cover-victim.md"] = "must survive"
 math.randomseed(42)
 dofile(servicePath)
 assertEqual(stateValues["reading_list.ready"], true, "service should initialize")
+assertEqual(stateValues["reading_list.error"], "", "a transient startup listing failure should self-repair")
 
 local traversalFixture = assert(findByTitle("Traversal fixture"), "frontmatter item should load")
 assertEqual(traversalFixture.id, "evil", "unsafe frontmatter id should fall back to the safe filename")
@@ -162,7 +172,7 @@ assertEqual(files["/library/.assets/../../cover-victim.md"], "must survive",
   "frontmatter asset paths must not delete files outside the assets folder")
 
 command({ op = "add", item = {
-  title = "First article", url = "https://example.com/first", source = "Example",
+  title = "First article", url = "example.com/first", source = "Example",
   topics = "lua, testing", collections = "Research", status = "reading",
   description = "A useful article.", rating = 4, review = "Worth reading.",
   notes = "Keep this note.\n\n## Personal heading",
@@ -173,6 +183,12 @@ command({ op = "add", item = {
 assertEqual(#items(), 2, "two items should be added")
 
 local first = assert(findByTitle("First article"))
+assertEqual(first.url, "https://example.com/first", "a bare domain should default to HTTPS")
+command({ op = "refresh_metadata", id = first.id })
+assert(pendingHttp ~= nil, "metadata refresh should start an HTTP request")
+pendingHttp(nil)
+assertEqual(stateValues["reading_list.error"], "errors.metadata", "a missing metadata response should be reported")
+assertEqual(findByTitle("First article").fetching, false, "a failed metadata request should not stay fetching")
 local second = assert(findByTitle("Second article"))
 assert(first.queueOrder < second.queueOrder, "new items should append to the queue")
 command({ op = "swap_queue", id = second.id, targetId = first.id })

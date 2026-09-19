@@ -76,6 +76,9 @@ watchers["reading_list.items"]({
 })
 watchers["reading_list.ready"](true)
 assert(byKey("search") ~= nil, "ready list should include search")
+assert(visit(rendered, function(node)
+  return type(node.props.key) == "string" and node.props.key:match("^card%-one%-0%-ready$") ~= nil
+end) ~= nil, "item cards should have a stable ready-state key")
 assert(byTooltip("Edit") ~= nil, "item cards should render edit actions")
 local statusButton = assert(visit(rendered, function(node)
   return node.type == "button" and node.props.glyph == "circle" and node.props.width == 94
@@ -91,6 +94,28 @@ readStatusButton.props.onClick()
 statusCommand = sentCommands[#sentCommands]
 assert(statusCommand.op == "set_status" and statusCommand.status == "unread",
   "the card status control should cycle from read to unread instead of archived")
+
+watchers["reading_list.items"]({
+  {
+    id = "one", type = "article", title = "Fetched title", url = "https://example.com/first",
+    source = "Example", author = "Writer", description = "Fetched description", topics = { "testing" },
+    collections = { "Research" }, status = "unread", favorite = false, progress = 25,
+    rating = 4, queueOrder = 1, createdAt = 1789200000, updatedAt = 1789200200,
+    icon = "/library/.assets/one-favicon.ico", image = "/library/.assets/one-cover.webp",
+    notes = "Notes", review = "Review", currentPage = 0, totalPages = 0, estimatedMinutes = 10,
+    notePath = "/library/Items/one.md", fetching = false,
+  },
+  {
+    id = "two", type = "book", title = "Second item", url = "", source = "Local",
+    author = "", description = "", topics = { "books" }, collections = { "Later" }, status = "read",
+    favorite = true, progress = 100, rating = 5, queueOrder = 2, createdAt = 1789200100,
+    icon = "", image = "", notes = "", review = "", currentPage = 50, totalPages = 100,
+    estimatedMinutes = 45, finishedAt = os.time(), notePath = "/library/Items/two.md",
+  },
+})
+assert(visit(rendered, function(node)
+  return node.props.key == "card-one-1789200200-ready"
+end) ~= nil, "metadata changes should receive a fresh card key for re-layout")
 
 byTooltip("Edit").props.onClick()
 assert(byKey("collection-1") ~= nil, "editor should render the managed collection selector")
