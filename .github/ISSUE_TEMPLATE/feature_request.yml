@@ -160,6 +160,7 @@ body:
         - prismlauncher-instances
         - processes
         - procmon
+        - profile-switcher
         - proton-pass
         - pulsar-mouse
         - qrcode
