@@ -9,6 +9,8 @@ local failNextList = true
 local pendingHttp = nil
 local writeTargets = {}
 local removeTargets = {}
+local jsonDecodeCalls = 0
+local syncExternalChanges = false
 
 local function jsonEscape(value)
   return '"' .. value:gsub('\\', '\\\\'):gsub('"', '\\"'):gsub('\n', '\\n') .. '"'
@@ -37,6 +39,7 @@ local function jsonEncode(value)
 end
 
 local function jsonDecode(value)
+  jsonDecodeCalls = jsonDecodeCalls + 1
   if type(value) ~= "string" then return nil end
   local luaValue = value:gsub("%[", "{"):gsub("%]", "}")
     :gsub('"([^"\\]+)"%s*:', '["%1"]='):gsub("null", "nil")
@@ -72,7 +75,8 @@ noctalia = {
   tr = function(key) return key end,
   getConfig = function(key)
     if key == "save_path" then return "/library" end
-    if key == "fetch_metadata" or key == "sync_external_changes" then return false end
+    if key == "fetch_metadata" then return false end
+    if key == "sync_external_changes" then return syncExternalChanges end
     return nil
   end,
   expandPath = function(path) return path end,
@@ -151,10 +155,72 @@ cover: /library/.assets/../../cover-victim.md
 ]]
 files["/library/.assets/../../cover-victim.md"] = "must survive"
 
+local function scaleFixture(index)
+  local id = "scale" .. tostring(index)
+  return table.concat({
+    "---",
+    "reading_list: true",
+    "id: \"" .. id .. "\"",
+    "type: \"article\"",
+    "title: \"Scale item " .. tostring(index) .. "\"",
+    "url: \"https://example.com/scale/" .. tostring(index) .. "\"",
+    "source: \"Example\"",
+    "author: \"Writer\"",
+    "description: \"A realistic persisted item\"",
+    "topics: []",
+    "collections: []",
+    "status: \"unread\"",
+    "favorite: false",
+    "progress: 0",
+    "current_page: 0",
+    "total_pages: 0",
+    "rating: 0",
+    "estimated_minutes: 0",
+    "queue_order: " .. tostring(index),
+    "created_at: " .. tostring(1789000000 + index),
+    "created: \"2026-09-20\"",
+    "started_at: 0",
+    "updated_at: 0",
+    "finished_at: 0",
+    "favicon: \"\"",
+    "cover: \"\"",
+    "---",
+    "",
+    "Scale note " .. tostring(index),
+    "",
+  }, "\n")
+end
+
+for index = 1, 32 do
+  files["/library/Items/scale" .. tostring(index) .. ".md"] = scaleFixture(index)
+end
+
 math.randomseed(42)
 dofile(servicePath)
 assertEqual(stateValues["reading_list.ready"], true, "service should initialize")
 assertEqual(stateValues["reading_list.error"], "", "a transient startup listing failure should self-repair")
+assertEqual(#items(), 33, "a realistic library should load within the service callback")
+assert(jsonDecodeCalls < 10, "ordinary persisted scalars should not require repeated JSON decoding")
+
+jsonDecodeCalls = 0
+syncExternalChanges = true
+update()
+assertEqual(jsonDecodeCalls, 0, "an unchanged library refresh should reuse parsed items")
+local scaleItem = assert(findByTitle("Scale item 32"), "scale fixture should remain available after refresh")
+command({ op = "set_status", id = scaleItem.id, status = "archived" })
+assertEqual(findByTitle("Scale item 32").status, "archived",
+  "archive commands should persist with a realistically sized library")
+assert(files["/library/Items/scale32.md"]:find('status: "archived"', 1, true),
+  "archived status should be written to the Markdown item")
+files["/library/Items/scale32.md"] = files["/library/Items/scale32.md"]
+  :gsub('status: "archived"', 'status: "reading"')
+command({ op = "sync" })
+assertEqual(findByTitle("Scale item 32").status, "reading",
+  "an externally edited item should invalidate its parsed cache")
+syncExternalChanges = false
+
+for index = 1, 32 do files["/library/Items/scale" .. tostring(index) .. ".md"] = nil end
+command({ op = "sync" })
 
 local traversalFixture = assert(findByTitle("Traversal fixture"), "frontmatter item should load")
 assertEqual(traversalFixture.id, "evil", "unsafe frontmatter id should fall back to the safe filename")

@@ -15,6 +15,10 @@ local exportsDir = nil
 local collectionsPath = nil
 local collections = {}
 local fetching = {}
+-- Sync polls still read each small note so external edits are detected, but
+-- unchanged notes keep their parsed item instead of spending the callback's
+-- CPU budget decoding the same frontmatter every 30 seconds.
+local itemCache = {}
 local lastError = ""
 
 local VALID_TYPES = { article = true, book = true, image = true }
@@ -156,11 +160,22 @@ end
 
 local function decodeScalar(raw)
   raw = trim(raw)
-  local decoded = noctalia.json.decode(raw)
-  if decoded ~= nil then return decoded end
+  -- Values written by serializeItem are overwhelmingly simple JSON scalars.
+  -- Keep those in Luau and reserve the host JSON decoder for arrays and
+  -- escaped strings; hundreds of decoder crossings can exhaust one callback.
   if raw == "true" then return true end
   if raw == "false" then return false end
-  return tonumber(raw) or raw
+  local number = tonumber(raw)
+  if number ~= nil then return number end
+  if raw == "[]" then return {} end
+  if raw == "{}" then return {} end
+  if raw:sub(1, 1) == "\"" and raw:sub(-1) == "\""
+      and raw:find("\\", 2, true) == nil then
+    return raw:sub(2, -2)
+  end
+  local decoded = noctalia.json.decode(raw)
+  if decoded ~= nil then return decoded end
+  return raw
 end
 
 local function mergedCollections(stored)
@@ -313,13 +328,15 @@ local function saveItem(item)
     return false
   end
   local temporary = path .. ".tmp"
-  local ok, err = noctalia.writeFile(temporary, serializeItem(item))
+  local content = serializeItem(item)
+  local ok, err = noctalia.writeFile(temporary, content)
   if ok then ok, err = noctalia.renameFile(temporary, path) end
   if not ok then
     noctalia.removeFile(temporary)
     lastError = err or noctalia.tr("errors.save")
     return false
   end
+  itemCache[item.id .. ".md"] = { raw = content, item = item }
   lastError = ""
   return true
 end
@@ -358,15 +375,21 @@ local function loadItems()
     return
   end
   local loaded = {}
+  local refreshedCache = {}
   for _, name in ipairs(names) do
     if name:match("%.md$") then
       local raw = noctalia.readFile(itemsDir .. "/" .. name)
       local fallbackId = name:gsub("%.md$", "")
-      local item = parseItem(raw, fallbackId)
-      if item ~= nil then table.insert(loaded, item) end
+      local cached = itemCache[name]
+      local item = cached ~= nil and cached.raw == raw and cached.item or parseItem(raw, fallbackId)
+      if item ~= nil then
+        table.insert(loaded, item)
+        refreshedCache[name] = { raw = raw, item = item }
+      end
     end
   end
   items = loaded
+  itemCache = refreshedCache
   local queueItems = {}
   for _, item in ipairs(items) do table.insert(queueItems, item) end
   table.sort(queueItems, function(a, b)
