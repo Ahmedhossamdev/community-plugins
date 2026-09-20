@@ -2827,3 +2827,16 @@ icon = "settings-automation"
 description = "Fuzzy-find systemd user and system units from the launcher and start, stop or restart them."
 plugin_api = 24
 tags = ["launcher", "system", "utility"]
+
+[[plugin]]
+id = "m4sc/profile-switcher"
+name = "Profile Switcher"
+version = "1.0.0"
+updated_at = 1789917275
+added_at = 1789917275
+author = "m4sc"
+license = "MIT"
+icon = "palette"
+description = "Switch and edit Noctalia appearance profiles."
+plugin_api = 30
+tags = ["theming", "wallpaper", "utility"]
