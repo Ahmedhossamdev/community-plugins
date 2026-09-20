@@ -2814,3 +2814,16 @@ icon = "music"
 description = "Play/pause, volume, now-playing, and audio outputs panel for OwnTone — no browser needed."
 plugin_api = 12
 tags = ["bar", "audio", "network", "panel", "utility"]
+
+[[plugin]]
+id = "srounce/systemd"
+name = "Systemd Units"
+version = "1.0.0"
+updated_at = 1789913700
+added_at = 1789913700
+author = "srounce"
+license = "MIT"
+icon = "settings-automation"
+description = "Fuzzy-find systemd user and system units from the launcher and start, stop or restart them."
+plugin_api = 24
+tags = ["launcher", "system", "utility"]
