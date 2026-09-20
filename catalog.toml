@@ -2788,3 +2788,16 @@ icon = "clipboard-check"
 description = "Multi-page tasks with details, drag reordering, copying, exports, and V4 migration."
 plugin_api = 22
 tags = ["bar", "panel", "service", "productivity"]
+
+[[plugin]]
+id = "strob3/dnf-updater"
+name = "DNF Updater"
+version = "1.0.0"
+updated_at = 1789909893
+added_at = 1789909893
+author = "strob3"
+license = "MIT"
+icon = "package"
+description = "Manage DNF and Flatpak updates."
+plugin_api = 24
+tags = ["bar", "panel", "service", "system", "fedora", "utility"]
