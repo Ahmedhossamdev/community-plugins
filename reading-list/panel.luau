@@ -882,9 +882,9 @@ local function editorView()
 
   local footer
   if pendingDelete and editingId ~= nil then
-    footer = ui.row({ gap = 6, align = "center", justify = "space_between" }, {
+    footer = ui.column({ key = "delete-confirmation", gap = 4, align = "stretch" }, {
       ui.label({ text = tr("panel.confirm-delete", "Delete this item?"), color = "on_surface_variant" }),
-      ui.row({ gap = 4 }, {
+      ui.row({ key = "delete-confirmation-actions", gap = 4, align = "center", justify = "end" }, {
         ui.button({ text = tr("panel.cancel", "Cancel"), variant = "ghost", controlSize = "sm",
           onClick = function() pendingDelete = false; render() end }),
         ui.button({ glyph = "trash", text = tr("panel.delete", "Delete"), variant = "destructive", controlSize = "sm",

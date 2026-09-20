@@ -137,6 +137,15 @@ local moreDetails = assert(visit(rendered, function(node) return node.props.text
 moreDetails.props.onClick()
 assert(visit(rendered, function(node) return node.props.text == "Choose image" end) ~= nil,
   "expanded editor should render the image chooser")
+byTooltip("Delete").props.onClick()
+local deleteConfirmation = assert(byKey("delete-confirmation"),
+  "editor delete should render a confirmation footer")
+assert(deleteConfirmation.type == "column",
+  "editor delete confirmation should stack its prompt and actions")
+local deleteActions = assert(byKey("delete-confirmation-actions"),
+  "editor delete confirmation should render its actions together")
+assert(deleteActions.type == "row" and deleteActions.props.justify == "end",
+  "editor delete actions should remain aligned without overlapping")
 
 onOpen()
 local sort = assert(byKey("sort-mode"), "list should render the sort selector")
