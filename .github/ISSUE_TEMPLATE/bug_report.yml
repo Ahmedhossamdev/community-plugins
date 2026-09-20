@@ -189,6 +189,7 @@ body:
         - syncthing
         - system-monitor
         - system-updater
+        - systemd
         - systempulse
         - taildrop
         - tailnet
