@@ -4,7 +4,7 @@
     "title": "Claude — quick ask"
   },
   "ask": {
-    "delivery": "The answer arrives as a notification; open the answer panel to read it in full.",
+    "delivery": "The answer opens in the answer panel and arrives as a notification.",
     "dispatch_failed": "Could not hand the question over. Is the noctalia CLI on PATH?",
     "no_runtime": "No XDG_RUNTIME_DIR, so there is nowhere to hand the question over.",
     "placeholder": "One quick question…",
@@ -36,6 +36,7 @@
   "notify": {
     "ask_failed": "ask failed",
     "auth_remedy": "Claude login expired — start a Claude session in a terminal to refresh it, then re-ask.",
+    "full_answer_hint": "Full answer: click the bar pulse",
     "no_output": "(no output)",
     "title": "Claude"
   },

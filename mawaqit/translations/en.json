@@ -1,4 +1,12 @@
 {
+  "calendar": {
+    "in_days": "in {days} days",
+    "loading": "Loading calendar…",
+    "next": "Next month",
+    "previous": "Previous month",
+    "today": "Back to today",
+    "today_label": "Today"
+  },
   "panel": {
     "in": "in",
     "jumuah": "Jumu'ah",
@@ -20,14 +28,6 @@
   },
   "plugin_description": "Prayer times with live countdown, notifications, and azan.",
   "plugin_name": "Mawaqit",
-  "calendar": {
-    "in_days": "in {days} days",
-    "loading": "Loading calendar…",
-    "next": "Next month",
-    "previous": "Previous month",
-    "today": "Back to today",
-    "today_label": "Today"
-  },
   "settings": {
     "active_color": {
       "description": "Color used when a prayer is happening now or in elapsed mode.",
@@ -48,13 +48,13 @@
       "description": "Country name or 2-letter code (e.g. UK, DZ, FR).",
       "label": "Country"
     },
-    "fajr_angle": {
-      "description": "Fajr sun angle for Custom Method. Use a decimal greater than 0 and less than 90.",
-      "label": "Fajr angle"
-    },
     "dynamic_icon": {
       "description": "Show a sun/moon icon matching the current prayer instead of the fixed icon.",
       "label": "Dynamic prayer icon"
+    },
+    "fajr_angle": {
+      "description": "Fajr sun angle for Custom Method. Use a decimal greater than 0 and less than 90.",
+      "label": "Fajr angle"
     },
     "hide_prayer_name": {
       "description": "Show only the time or countdown without the prayer name.",
@@ -69,6 +69,10 @@
     },
     "icon_color": {
       "label": "Bar icon color"
+    },
+    "isha_angle": {
+      "description": "Isha sun angle for Custom Method. Use a decimal greater than 0 and less than 90.",
+      "label": "Isha angle"
     },
     "method": {
       "algeria": "Algeria / MESRS",
@@ -96,10 +100,6 @@
       "tehran": "Institute of Geophysics, Tehran",
       "tunisia": "Tunisia",
       "turkey": "Diyanet İşleri Başkanlığı, Turkey"
-    },
-    "isha_angle": {
-      "description": "Isha sun angle for Custom Method. Use a decimal greater than 0 and less than 90.",
-      "label": "Isha angle"
     },
     "play_azan": {
       "description": "Play an azan audio file when each prayer time begins.",
@@ -149,15 +149,15 @@
       "description": "Show prayer times in 12-hour format (e.g. 5:23 AM) instead of 24-hour.",
       "label": "12-Hour Format"
     },
-    "widget_icon": {
-      "label": "Bar icon"
-    },
     "week_start_day": {
       "description": "Choose which day starts the calendar week.",
       "label": "First day of week",
       "monday": "Monday",
       "saturday": "Saturday",
       "sunday": "Sunday"
+    },
+    "widget_icon": {
+      "label": "Bar icon"
     }
   }
 }
