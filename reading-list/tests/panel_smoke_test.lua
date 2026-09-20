@@ -73,9 +73,22 @@ watchers["reading_list.items"]({
     icon = "", image = "", notes = "", review = "", currentPage = 50, totalPages = 100,
     estimatedMinutes = 45, finishedAt = os.time(), notePath = "/library/Items/two.md",
   },
+  {
+    id = "three", type = "article", title = "Archived item", url = "", source = "Local",
+    author = "", description = "", topics = {}, collections = {}, status = "archived",
+    favorite = false, progress = 0, rating = 0, queueOrder = 3, createdAt = 1789200200,
+    icon = "", image = "", notes = "", review = "", currentPage = 0, totalPages = 0,
+    estimatedMinutes = 0, notePath = "/library/Items/three.md",
+  },
 })
 watchers["reading_list.ready"](true)
 assert(byKey("search") ~= nil, "ready list should include search")
+assert(byKey("card-three-0-ready") == nil, "the All filter should hide archived items")
+byKey("filter-archived").props.onClick()
+assert(byKey("card-three-0-ready") ~= nil, "the Archived filter should show archived items")
+assert(byKey("card-one-0-ready") == nil, "the Archived filter should hide active items")
+byKey("filter-all").props.onClick()
+assert(byKey("card-three-0-ready") == nil, "returning to All should hide archived items again")
 assert(visit(rendered, function(node)
   return type(node.props.key) == "string" and node.props.key:match("^card%-one%-0%-ready$") ~= nil
 end) ~= nil, "item cards should have a stable ready-state key")

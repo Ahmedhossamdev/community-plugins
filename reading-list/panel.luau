@@ -289,6 +289,7 @@ local function formatDate(ts)
 end
 
 local function matches(item)
+  if filter == "all" and item.status == "archived" then return false end
   if filter == "favorites" and item.favorite ~= true then return false end
   if filter ~= "all" and filter ~= "favorites" and item.status ~= filter then return false end
   if collectionFilter ~= "" then
