@@ -2801,3 +2801,16 @@ icon = "package"
 description = "Manage DNF and Flatpak updates."
 plugin_api = 24
 tags = ["bar", "panel", "service", "system", "fedora", "utility"]
+
+[[plugin]]
+id = "danielel/owntone-control"
+name = "OwnTone Control"
+version = "0.3.0"
+updated_at = 1789913586
+added_at = 1789913586
+author = "danielel"
+license = "MIT"
+icon = "music"
+description = "Play/pause, volume, now-playing, and audio outputs panel for OwnTone — no browser needed."
+plugin_api = 12
+tags = ["bar", "audio", "network", "panel", "utility"]
