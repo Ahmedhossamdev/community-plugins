@@ -2853,3 +2853,16 @@ icon = "access-point"
 description = "Share WiFi hotspot without losing laptop connection, with auto-detected channel and client limits."
 plugin_api = 3
 tags = ["network", "bar", "panel", "utility", "system", "indicator"]
+
+[[plugin]]
+id = "knyrps/nix-search"
+name = "Nix Search"
+version = "0.1.0"
+updated_at = 1790009183
+added_at = 1790009183
+author = "knyrps"
+license = "MIT"
+icon = "snowflake"
+description = "Search nixpkgs, NixOS, Home Manager and NUR from the launcher via nix-search-tv"
+plugin_api = 24
+tags = ["launcher", "service", "utility", "development"]
