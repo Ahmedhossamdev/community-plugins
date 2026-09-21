@@ -1073,8 +1073,8 @@ tags = ["panel", "fun", "network", "privacy", "productivity", "utility"]
 [[plugin]]
 id = "alexander/screen-toolkit"
 name = "Screen Toolkit"
-version = "1.4.2"
-updated_at = 1789746154
+version = "1.4.3"
+updated_at = 1789991750
 added_at = 1785759728
 author = "alexander"
 license = "MIT"
@@ -2792,8 +2792,8 @@ tags = ["bar", "panel", "service", "productivity"]
 [[plugin]]
 id = "strob3/dnf-updater"
 name = "DNF Updater"
-version = "1.0.0"
-updated_at = 1789909893
+version = "1.0.1"
+updated_at = 1789991732
 added_at = 1789909893
 author = "strob3"
 license = "MIT"
