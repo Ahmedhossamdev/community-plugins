@@ -2840,3 +2840,16 @@ icon = "palette"
 description = "Switch and edit Noctalia appearance profiles."
 plugin_api = 30
 tags = ["theming", "wallpaper", "utility"]
+
+[[plugin]]
+id = "conqazht/share-wifi"
+name = "Share WiFi"
+version = "1.0.0"
+updated_at = 1790006494
+added_at = 1790006494
+author = "conqazht"
+license = "MIT"
+icon = "access-point"
+description = "Share WiFi hotspot without losing laptop connection, with auto-detected channel and client limits."
+plugin_api = 3
+tags = ["network", "bar", "panel", "utility", "system", "indicator"]
