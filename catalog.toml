@@ -813,15 +813,21 @@ tags = ["arch", "bar", "panel", "launcher", "system", "utility"]
 [[plugin]]
 id = "damian-ds7/battery-threshold"
 name = "Battery Threshold Control"
-version = "1.0.1"
-updated_at = 1785287535
+version = "1.1.0"
+updated_at = 1790033391
 added_at = 1785245426
 author = "Damian D'Souza"
 license = "MIT"
 icon = "battery-eco"
 description = "Set the battery threshold for laptop batteries to extend battery lifespan"
-plugin_api = 3
+plugin_api = 22
 tags = ["hardware", "system", "utility", "bar", "panel"]
+
+[[plugin.release]]
+plugin_api = 3
+version = "1.0.1"
+updated_at = 1785287535
+rev = "253668025d2ce96e2709701bebca41d364beb839"
 
 [[plugin]]
 id = "ramosdetrigo/godot-provider"
