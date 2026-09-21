@@ -134,6 +134,7 @@ body:
         - niri-ribbon
         - niri-rules-studio
         - nix-monitor
+        - nix-search
         - nix-status
         - noctwhspr
         - nvim-projects
