@@ -322,8 +322,8 @@ tags = ["desktop", "wallpaper"]
 [[plugin]]
 id = "cleboost/zed-provider"
 name = "Zed Provider"
-version = "1.1.0"
-updated_at = 1789597151
+version = "1.2.0"
+updated_at = 1790036171
 added_at = 1784334664
 author = "cleboost"
 license = "MIT"
@@ -1480,13 +1480,13 @@ tags = ["bar", "shortcut", "wallpaper"]
 [[plugin]]
 id = "raycursive/niri-displays"
 name = "Niri Displays"
-version = "0.4.0"
-updated_at = 1788119053
+version = "0.5.0"
+updated_at = 1790036155
 added_at = 1786903345
 author = "raycursive"
 license = "MIT"
 icon = "device-desktop"
-description = "Inspect connected Niri outputs and temporarily adjust resolution, refresh rate, scale, rotation, and position."
+description = "Toggle Niri outputs on or off and temporarily adjust resolution, refresh rate, scale, rotation, and position."
 plugin_api = 9
 tags = ["bar", "niri", "panel", "service", "system", "utility"]
 
