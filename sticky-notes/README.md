@@ -46,10 +46,11 @@ reused, and any nonempty draft in the current editor is saved before switching.
 The new note uses `default_color`. **Done**, **Back**, or closing the panel
 saves the text; leaving the note empty removes it.
 
-For example, add this binding inside Niri's `binds` block:
+To toggle quick capture open and closed, add this binding inside Niri's `binds`
+block. Pressing it again closes the capture panel and saves the draft:
 
 ```kdl
-Mod+Alt+N { spawn "noctalia" "msg" "plugin" "ahmedhossamdev/sticky-notes:service" "all" "new-note"; }
+Mod+Alt+N { spawn "noctalia" "msg" "panel-toggle" "ahmedhossamdev/sticky-notes:panel" "new-note"; }
 ```
 
 Other compositors can bind the same command. With `auto_blur` enabled, existing
